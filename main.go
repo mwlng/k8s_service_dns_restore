@@ -21,17 +21,38 @@ import (
 
 	corev1 "k8s.io/api/core/v1"
 
+	"github.com/mwlng/aws-go-clients/clients"
+	"github.com/mwlng/aws-go-clients/service"
 	"github.com/mwlng/k8s_resources_sync/pkg/helpers"
 	"github.com/mwlng/k8s_resources_sync/pkg/utils"
 )
 
+const (
+	defaultRegion  = "us-east-1"
+	defaultEnviron = "alpha"
+)
+
 var (
-	homeDir string
+	homeDir       string
+	r53Cli        *clients.R53Client
+	hostedZoneIds = map[string]string{
+		"alpha": "Z0300709FFG0S6WMO3S",
+		"qa":    "Z0176301YOHIVCTCW9TG",
+		"prod":  "Z08708993EO08ZJY0OUSO",
+	}
 )
 
 func init() {
 	klog.InitFlags(nil)
 	homeDir = utils.GetHomeDir()
+
+	svc := service.Service{
+		Region: defaultRegion,
+	}
+	sess := svc.NewSession()
+
+	r53Cli = clients.NewClient("route53", sess).(*clients.R53Client)
+
 }
 
 func main() {
@@ -46,7 +67,7 @@ func main() {
 		kubeconfig = flag.String("kubeconfig", "", "absolute path to the kubeconfig file")
 	}
 
-	environ := flag.String("e", "alpha", "Target environment")
+	environ := flag.String("e", defaultEnviron, "Target environment")
 	srcEksClusterName := flag.String("source_cluster_name", "", "Source k8s cluster name")
 
 	flag.Set("v", "2")
@@ -71,8 +92,9 @@ func main() {
 		klog.Errorf("Failed to list services. Err was %s", err)
 	}
 
+	zoneId := hostedZoneIds[*environ]
 	for _, lbService := range lbServices {
-		fmt.Printf("%+v\n", lbService)
+		ChangeLBServiceResourceRecordSet(lbService, &zoneId)
 	}
 }
 
