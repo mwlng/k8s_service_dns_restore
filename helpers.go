@@ -14,7 +14,7 @@ type LBService struct {
 	DnsName      string
 }
 
-func ListServices(kubeConfig *rest.Config, lbType string) ([]*LBService, error) {
+func ListServices(kubeConfig *rest.Config, lbType corev1.ServiceType) ([]*LBService, error) {
 	service, err := k8s_resources.NewService(kubeConfig, corev1.NamespaceDefault)
 	if err != nil {
 		return nil, err
@@ -27,13 +27,15 @@ func ListServices(kubeConfig *rest.Config, lbType string) ([]*LBService, error) 
 	}
 
 	for _, s := range serviceList.Items {
-		lbService := &LBService{
-			Name:         s.Name,
-			LoadBalancer: s.Status.LoadBalancer.Ingress[0].Hostname,
-			DnsName:      s.Annotations["external-dns.alpha.kubernetes.io/hostname"],
-		}
+		if s.Spec.Type == lbType {
+			lbService := &LBService{
+				Name:         s.Name,
+				LoadBalancer: s.Status.LoadBalancer.Ingress[0].Hostname,
+				DnsName:      s.Annotations["external-dns.alpha.kubernetes.io/hostname"],
+			}
 
-		lbServices = append(lbServices, lbService)
+			lbServices = append(lbServices, lbService)
+		}
 	}
 
 	return lbServices, nil

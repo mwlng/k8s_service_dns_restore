@@ -19,6 +19,8 @@ import (
 	// _ "k8s.io/client-go/plugin/pkg/client/auth/oidc"
 	// _ "k8s.io/client-go/plugin/pkg/client/auth/openstack"
 
+	corev1 "k8s.io/api/core/v1"
+
 	"github.com/mwlng/k8s_resources_sync/pkg/helpers"
 	"github.com/mwlng/k8s_resources_sync/pkg/utils"
 )
@@ -64,7 +66,7 @@ func main() {
 	}
 
 	klog.Infof("Starting to restore k8s externl dns for ELB from %s in %s ...", sourceKubeConfig.Host, *environ)
-	lbServices, err := ListServices(sourceKubeConfig, "LoadBalancer")
+	lbServices, err := ListServices(sourceKubeConfig, corev1.ServiceTypeLoadBalancer)
 	if err != nil {
 		klog.Errorf("Failed to list services. Err was %s", err)
 	}
