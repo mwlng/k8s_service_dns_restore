@@ -152,8 +152,8 @@ github.com/modern-go/reflect2 v0.0.0-20180701023420-4b7aa43c6742/go.mod h1:bx2lN
 github.com/modern-go/reflect2 v1.0.1 h1:9f412s+6RmYXLWZSEzVVgPGK7C2PphHj5RJrvfx9AWI=
 github.com/modern-go/reflect2 v1.0.1/go.mod h1:bx2lNnkwVCuqBIxFjflWJWanXIb3RllmbCylyMrvgv0=
 github.com/munnerz/goautoneg v0.0.0-20120707110453-a547fc61f48d/go.mod h1:+n7T8mK8HuQTcFwEeznm/DIxMOiR9yIdICNftLE1DvQ=
-github.com/mwlng/aws-go-clients v0.0.0-20210424205621-f6bae2c3f88e h1:apCBFpEFslrwW9Yj4duLlEM4HB9HLlMKpsBbqbd+OA4=
-github.com/mwlng/aws-go-clients v0.0.0-20210424205621-f6bae2c3f88e/go.mod h1:KQ9ZdR7rDLItIQ6t7ze7WDDe2kafznAOK5UHtMJKrXU=
+github.com/mwlng/aws-go-clients v0.0.0-20210425041052-51d6a87ab8c7 h1:WOgmV/JIl+VhMRgf1OYtsWNyGD+ByGDKCPgCzky/WZU=
+github.com/mwlng/aws-go-clients v0.0.0-20210425041052-51d6a87ab8c7/go.mod h1:KQ9ZdR7rDLItIQ6t7ze7WDDe2kafznAOK5UHtMJKrXU=
 github.com/mwlng/k8s_resources_sync v0.0.0-20210423205638-4d780d07ffa1 h1:+/ogTgUqa5Zscx2DNytxnnGKFKnI6NV6UmquPHKEiTc=
 github.com/mwlng/k8s_resources_sync v0.0.0-20210423205638-4d780d07ffa1/go.mod h1:l3MB8e+J9O2zfuILWZYRuCcTc7tztGqXHMjP5H1pEnE=
 github.com/mxk/go-flowrate v0.0.0-20140419014527-cca7078d478f/go.mod h1:ZdcZmHo+o7JKHSa8/e818NopupXU1YMK5fe1lsApnBw=
