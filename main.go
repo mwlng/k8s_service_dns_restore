@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"k8s.io/client-go/util/homedir"
 	"k8s.io/klog/v2"
@@ -21,6 +22,7 @@ import (
 
 	corev1 "k8s.io/api/core/v1"
 
+	"github.com/aws/aws-sdk-go/service/route53"
 	"github.com/mwlng/aws-go-clients/clients"
 	"github.com/mwlng/aws-go-clients/service"
 	"github.com/mwlng/k8s_resources_sync/pkg/helpers"
@@ -93,9 +95,27 @@ func main() {
 	}
 
 	zoneId := hostedZoneIds[*environ]
+	recordSets := []*route53.ResourceRecordSet{}
 	for _, lbService := range lbServices {
-		ChangeLBServiceResourceRecordSet(lbService, &zoneId)
+		dnsName := lbService.DnsName
+		if !strings.HasSuffix(dnsName, ".") {
+			dnsName = fmt.Sprintf("%s.", dnsName)
+		}
+		recordSet := r53Cli.GetResourceRecordSet(&dnsName, &zoneId)
+
+		if recordSet != nil {
+			recordSets = append(recordSets, recordSet)
+		} else {
+			klog.Infof("Can't find route53 resource record set with name: %s, skipped\n", dnsName)
+		}
 	}
+
+	action := "UPSERT"
+	comment := "Restore dns records related to k8s loadbalacer service"
+	result := r53Cli.ChangeResourceRecordSets(recordSets, &action, &zoneId, &comment)
+
+	klog.Infof("%s\n", result)
+
 }
 
 func Usage() {

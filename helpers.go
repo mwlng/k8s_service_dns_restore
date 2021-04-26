@@ -1,9 +1,6 @@
 package main
 
 import (
-	"fmt"
-	"strings"
-
 	corev1 "k8s.io/api/core/v1"
 
 	"k8s.io/client-go/rest"
@@ -42,13 +39,4 @@ func ListServices(kubeConfig *rest.Config, lbType corev1.ServiceType) ([]*LBServ
 	}
 
 	return lbServices, nil
-}
-
-func ChangeLBServiceResourceRecordSet(lbService *LBService, hostedZoneId *string) {
-	dnsName := lbService.DnsName
-	if !strings.HasSuffix(dnsName, ".") {
-		dnsName = fmt.Sprintf("%s.", dnsName)
-	}
-	recordSet := r53Cli.GetResourceRecordSet(&dnsName, hostedZoneId)
-	fmt.Printf("%+v\n", recordSet)
 }
