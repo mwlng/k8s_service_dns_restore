@@ -92,6 +92,7 @@ func main() {
 	lbServices, err := ListServices(sourceKubeConfig, corev1.ServiceTypeLoadBalancer)
 	if err != nil {
 		klog.Errorf("Failed to list services. Err was %s", err)
+		os.Exit(1)
 	}
 
 	zoneId := hostedZoneIds[*environ]
